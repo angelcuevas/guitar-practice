@@ -4,29 +4,36 @@ import NoteSelector from './NoteSelector';
 
 const SingleBassNote = () => {
 
-    const manager = useRef(new Player());
+    const managerRef = useRef(new Player());
+    const manager = managerRef.current; 
     const [duration,setDuration] = useState<string>('30');
     const [availableNotes, setAvailableNotes] = useState<string[]>(DEFAULT_AVAILABLE_NOTES)
-    const [timer, setTimer] = useState<string>('0')
+    const [timer, setTimer] = useState<string>('?')
+    const [error, setError] = useState<string>('')
 
     const addNote = (note:string)=>{
         if(availableNotes.includes(note)){
-            let available = availableNotes.filter(a=>!a.includes(note))
+            let available = availableNotes.filter(a=>a != note)
             setAvailableNotes(available);
             return; 
         }
         setAvailableNotes([...availableNotes,`${note}` ]);
     }
 
-    const handleButtonClick= ()=>{
-        if(manager.current.isPlaying){
-            manager.current.stop();
+    const handleButtonClick= async ()=>{
+        if(managerRef.current.isPlaying){
+            managerRef.current.stop();
             return; 
-
         }
-        manager.current.play(availableNotes, duration, ({timer, currentNote})=>{
-            setTimer(timer >= 0? timer : currentNote )
-        })
+        try {
+            await managerRef.current.play(availableNotes, duration, ({timer, currentNote})=>{
+                setTimer(timer >= 0? timer : currentNote )
+            })
+            setError('')
+        } catch (error) {
+            setError(error && error.message ? error.message: error)
+        }
+
     }
 
     return (
@@ -35,8 +42,9 @@ const SingleBassNote = () => {
                 <div className="timer"> {timer} </div>
                 <div className="config">
                     <input type="text" value={duration} onChange={(e)=>setDuration(e.target.value)}/>
-                    <button onClick={()=>handleButtonClick()}>Start</button>
+                    <button onClick={()=>handleButtonClick()}>{manager.isPlaying ? 'Stop' : 'Start'}</button>
                 </div>
+                {error && <div className="error"> {error} </div>}
                 <NoteSelector 
                     selectedNotes={availableNotes} 
                     onNoteClicked={(n:string)=>addNote(n)}/>

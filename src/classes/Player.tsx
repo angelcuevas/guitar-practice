@@ -5,16 +5,20 @@ const TIME_TO_SHOW_RESULT = 10*1000;
 const OCTAVES = ['2', '3'];
 
 class Player {
-    static isPlaying = false; 
-    static timeOutref;
-    static timer; 
+    public static isPlaying = false; 
+    static timeOutref = null;
+    static timer = null; 
     static synth = new Tone.Synth().toDestination();
     static currentNote = '';
+    public static tickCallbackRef; 
+
  
     async play(avaibleNotes:string[], duration:number, tickCallback){
+        if(!avaibleNotes || avaibleNotes.length === 0) throw new Error('There are no notes selected.')
         this.isPlaying =true; 
         this.duration = duration; 
         this.timer = duration; 
+        Player.tickCallbackRef = tickCallback;
 
         this.playRandomNote(avaibleNotes, duration*STEP_DURATION)
         tickCallback({timer:this.timer});
@@ -33,6 +37,7 @@ class Player {
         this.isPlaying =false; 
         Player.synth.triggerRelease()
         clearInterval(this.timeOutref)
+        Player.tickCallbackRef({currentNote:'?'})
     }
 
 

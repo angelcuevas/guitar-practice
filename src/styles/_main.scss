@@ -1,8 +1,11 @@
 :root {
-    --background-color: #ddd;
-    --neutral-color: #fff; 
+    --light-color: #ddd;
+    --light-color2: #fff; 
     --windows-background-color: #baa;
     --windows-special-color: blue;
+    --dark-color: #a38c8c;
+    --dark-color2: #8b6f6f;
+    --dark-color3: #816767;
   }
   
 html, body {
@@ -10,7 +13,7 @@ html, body {
 }
 
 .sbn {
-  border:1px solid var(--neutral-color);
+  border:1px solid var(--dark-color);
   background: var(--windows-background-color);
   h1 {
     text-align: center;
@@ -27,7 +30,7 @@ html, body {
 
   input, button {
     background: #baa;
-    border: 2px solid var(--neutral-color); 
+    border: 2px solid var(--dark-color); 
     border-radius: 2px;
     padding: 10px;
     color: #fff;
@@ -43,22 +46,38 @@ html, body {
 
 .notes-selector {
   display:flex;
+  flex-wrap: wrap;
   justify-content: center;
 
   div {
     font-size: 2em;
-    padding: 10px;
-    border: 1px solid var(--neutral-color);
+    width: 2em;
+    height: 2em;
+    line-height: 2em;
+    text-align: center;
+    border: 1px solid var(--dark-color);
     margin: 0.2em;
-
+    border-radius: 3px;
+    vertical-align: middle;
+    
     &.selected {
-      background: var(--windows-special-color);
-      border:2px solid var(--windows-special-color);
+      background: var(--dark-color2); 
+      border:2px solid var(--dark-color2); 
     }
     &:hover{
       cursor: pointer;
-      background: var(--neutral-color);  
-      border:2px solid var(--neutral-color);
+      background: var(--dark-color); 
+      border:2px solid var(--dark-color); 
+    }
+    &:hover.selected{
+      cursor: pointer;
+      background: var(--dark-color3); 
+      border:2px solid var(--dark-color3); 
     }
   }
+}
+
+.error {
+  color : red;
+  text-align: center; 
 }
