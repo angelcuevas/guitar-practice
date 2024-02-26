@@ -1,0 +1,64 @@
+:root {
+    --background-color: #ddd;
+    --neutral-color: #fff; 
+    --windows-background-color: #baa;
+    --windows-special-color: blue;
+  }
+  
+html, body {
+  background: var(--windows-background-color);
+}
+
+.sbn {
+  border:1px solid var(--neutral-color);
+  background: var(--windows-background-color);
+  h1 {
+    text-align: center;
+  }
+
+  .timer {
+    font-size: 4em;
+    text-align: center;
+  }
+
+  .config {
+    text-align: center;
+  }
+
+  input, button {
+    background: #baa;
+    border: 2px solid var(--neutral-color); 
+    border-radius: 2px;
+    padding: 10px;
+    color: #fff;
+    margin:5px;
+
+  }
+  button {
+    &:active {
+      background:red; 
+    }
+  }
+}
+
+.notes-selector {
+  display:flex;
+  justify-content: center;
+
+  div {
+    font-size: 2em;
+    padding: 10px;
+    border: 1px solid var(--neutral-color);
+    margin: 0.2em;
+
+    &.selected {
+      background: var(--windows-special-color);
+      border:2px solid var(--windows-special-color);
+    }
+    &:hover{
+      cursor: pointer;
+      background: var(--neutral-color);  
+      border:2px solid var(--neutral-color);
+    }
+  }
+}
