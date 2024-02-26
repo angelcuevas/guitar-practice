@@ -1,15 +1,13 @@
-import React from 'react'
-
 interface IProps {
     selectedNotes: string[]
-    onNoteClicked?: (note:string)=>void;
+    onNoteClicked?: ((note:string)=>void) | null;
 }
 
 const NOTES = ['C','D','E','F','G', 'A','B','C#','D#', 'F#', "G#", "A#"]
 
 const NoteSelector = ({ selectedNotes, onNoteClicked=null }: IProps) => {   
 
-    const handleNoteClick = (n)=>{
+    const handleNoteClick = (n:string)=>{
         if(onNoteClicked){
             onNoteClicked(n)
         }

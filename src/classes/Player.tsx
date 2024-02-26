@@ -6,42 +6,45 @@ const OCTAVES = ['2', '3'];
 
 class Player {
     public static isPlaying = false; 
-    static timeOutref = null;
-    static timer = null; 
+    static timeOutref :any = undefined;
+    static timer : any = null; 
     static synth = new Tone.Synth().toDestination();
     static currentNote = '';
-    public static tickCallbackRef; 
+    public static tickCallbackRef : any; 
+    duration: any; 
 
- 
-    async play(avaibleNotes:string[], duration:number, tickCallback){
+
+    async play(avaibleNotes:string[], duration:number | string, tickCallback:any){
         if(!avaibleNotes || avaibleNotes.length === 0) throw new Error('There are no notes selected.')
-        this.isPlaying =true; 
+        Player.isPlaying =true; 
         this.duration = duration; 
-        this.timer = duration; 
+        Player.timer = duration; 
         Player.tickCallbackRef = tickCallback;
 
-        this.playRandomNote(avaibleNotes, duration*STEP_DURATION)
-        tickCallback({timer:this.timer});
-        this.timeOutref = setInterval(()=>{
-            this.timer-= 1;
-            
-            if(this.timer == ((TIME_TO_SHOW_RESULT/1000) * -1)-1){
-                this.timer = this.duration;
-                this.playRandomNote(avaibleNotes, duration*STEP_DURATION)
+        this.playRandomNote(avaibleNotes, parseInt(''+duration)*STEP_DURATION)
+        tickCallback({timer:Player.timer});
+        Player.timeOutref = setInterval(()=>{
+            if(Player.timer){
+                Player.timer-= 1;
             }
-            tickCallback({timer:this.timer, currentNote: Player.currentNote})
+            
+            if(Player.timer == ((TIME_TO_SHOW_RESULT/1000) * -1)-1){
+                Player.timer = this.duration;
+                this.playRandomNote(avaibleNotes, ''+parseInt(''+duration)*STEP_DURATION)
+            }
+            tickCallback({timer:Player.timer, currentNote: Player.currentNote})
         }, STEP_DURATION)
     }
 
     async stop(){
-        this.isPlaying =false; 
+        Player.isPlaying =false; 
         Player.synth.triggerRelease()
-        clearInterval(this.timeOutref)
+        clearInterval(Player.timeOutref)
         Player.tickCallbackRef({currentNote:'?'})
     }
 
 
-    async playRandomNote(avaibleNotes = DEFAULT_AVAILABLE_NOTES, time:number = 5000){
+    async playRandomNote(avaibleNotes = DEFAULT_AVAILABLE_NOTES, time:string | number = 5000){
         const randomIndex = this.getRandonNumberBetween(avaibleNotes.length) 
         const randomOctaveIndex = this.getRandonNumberBetween(OCTAVES.length); 
         const randomNote = avaibleNotes[randomIndex] + OCTAVES[randomOctaveIndex];
@@ -53,10 +56,10 @@ class Player {
 
         setTimeout(()=>{
             synth.triggerRelease()
-        }, time+TIME_TO_SHOW_RESULT)
+        }, parseInt(''+time)+TIME_TO_SHOW_RESULT)
     }
 
-    getRandonNumberBetween(number){
+    getRandonNumberBetween(number:any){
         return Math.floor(Math.random()*number);;
     }
 

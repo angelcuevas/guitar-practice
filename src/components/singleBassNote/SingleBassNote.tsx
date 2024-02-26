@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState} from 'react'
+import {useRef, useState} from 'react'
 import Player, { DEFAULT_AVAILABLE_NOTES } from '../../classes/Player'
 import NoteSelector from './NoteSelector';
 
@@ -21,16 +21,16 @@ const SingleBassNote = () => {
     }
 
     const handleButtonClick= async ()=>{
-        if(managerRef.current.isPlaying){
-            managerRef.current.stop();
+        if(Player.isPlaying){
+            manager.stop();
             return; 
         }
         try {
-            await managerRef.current.play(availableNotes, duration, ({timer, currentNote})=>{
+            await manager.play(availableNotes, duration, ({timer, currentNote}:any)=>{
                 setTimer(timer >= 0? timer : currentNote )
             })
             setError('')
-        } catch (error) {
+        } catch (error:any) {
             setError(error && error.message ? error.message: error)
         }
 
@@ -42,7 +42,7 @@ const SingleBassNote = () => {
                 <div className="timer"> {timer} </div>
                 <div className="config">
                     <input type="text" value={duration} onChange={(e)=>setDuration(e.target.value)}/>
-                    <button onClick={()=>handleButtonClick()}>{manager.isPlaying ? 'Stop' : 'Start'}</button>
+                    <button onClick={()=>handleButtonClick()}>{Player.isPlaying ? 'Stop' : 'Start'}</button>
                 </div>
                 {error && <div className="error"> {error} </div>}
                 <NoteSelector 
