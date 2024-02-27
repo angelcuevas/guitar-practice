@@ -1,13 +1,15 @@
 import * as Tone from 'tone'
 export const DEFAULT_AVAILABLE_NOTES = ['A','B','C','D','E','F','G']
 const STEP_DURATION = 1000; 
-const TIME_TO_SHOW_RESULT = 10*1000;
+const TIME_TO_SHOW_RESULT_IN_SECONDS = 10; 
+const TIME_TO_SHOW_RESULT = TIME_TO_SHOW_RESULT_IN_SECONDS*1000;
 const OCTAVES = ['2', '3'];
 
 class Player {
     public static isPlaying = false; 
     static timeOutref :any = undefined;
     static timer : any = null; 
+    static resultTimer: any = null; 
     static synth = new Tone.Synth().toDestination();
     static currentNote = '';
     public static tickCallbackRef : any; 
@@ -19,20 +21,27 @@ class Player {
         Player.isPlaying =true; 
         this.duration = duration; 
         Player.timer = duration; 
+        Player.resultTimer = null; 
         Player.tickCallbackRef = tickCallback;
 
         this.playRandomNote(avaibleNotes, parseInt(''+duration)*STEP_DURATION)
         tickCallback({timer:Player.timer});
         Player.timeOutref = setInterval(()=>{
-            if(Player.timer){
+            if(Player.timer != null){
                 Player.timer-= 1;
             }
+
+            if(Player.timer == -1){
+                Player.resultTimer = TIME_TO_SHOW_RESULT_IN_SECONDS; 
+            }else if(Player.resultTimer != null){
+                Player.resultTimer-= 1;
+            }   
             
             if(Player.timer == ((TIME_TO_SHOW_RESULT/1000) * -1)-1){
                 Player.timer = this.duration;
                 this.playRandomNote(avaibleNotes, ''+parseInt(''+duration)*STEP_DURATION)
             }
-            tickCallback({timer:Player.timer, currentNote: Player.currentNote})
+            tickCallback({timer:Player.timer, currentNote: Player.currentNote, resultT: Player.resultTimer > 0 ? Player.resultTimer : null})
         }, STEP_DURATION)
     }
 

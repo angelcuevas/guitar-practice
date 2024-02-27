@@ -9,6 +9,7 @@ const SingleBassNote = () => {
     const [duration,setDuration] = useState<string>('30');
     const [availableNotes, setAvailableNotes] = useState<string[]>(DEFAULT_AVAILABLE_NOTES)
     const [timer, setTimer] = useState<string>('?')
+    const [resultTimer, setResultTimer] = useState<string>('')
     const [error, setError] = useState<string>('')
 
     const addNote = (note:string)=>{
@@ -26,8 +27,9 @@ const SingleBassNote = () => {
             return; 
         }
         try {
-            await manager.play(availableNotes, duration, ({timer, currentNote}:any)=>{
+            await manager.play(availableNotes, duration, ({timer, currentNote, resultT}:any)=>{
                 setTimer(timer >= 0? timer : currentNote )
+                setResultTimer(resultT)
             })
             setError('')
         } catch (error:any) {
@@ -39,7 +41,7 @@ const SingleBassNote = () => {
     return (
             <div className="sbn">
                 <h1>SingleBassNote</h1>
-                <div className="timer"> {timer} </div>
+                <div className="timer"> {timer} <span>{resultTimer}</span> </div> 
                 <div className="config">
                     <input type="text" value={duration} onChange={(e)=>setDuration(e.target.value)}/>
                     <button onClick={()=>handleButtonClick()}>{Player.isPlaying ? 'Stop' : 'Start'}</button>
